@@ -1,0 +1,15 @@
+{
+  "name": "hj-12-diplom",
+  "version": "1.0.0",
+  "description": "Дипломный проект, курс JavaScript в браузере",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sergei Baranov",
+  "license": "ISC",
+  "dependencies": {
+    "websocket": "^1.0.25"
+  }
+}

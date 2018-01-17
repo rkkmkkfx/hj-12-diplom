@@ -1,0 +1,21 @@
+body {
+  background-image: url(https://unsplash.it/g/1280/1024/?random);
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+main {
+  display: flex;
+  min-height: 100vh;
+}
+
+.login-block {
+  margin: auto;
+}
+.login-block canvas {
+  border-radius: 5px;
+}
+
+.login-block p {
+  text-align: center;
+}
