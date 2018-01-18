@@ -23,7 +23,8 @@ server.listen(webSocketsServerPort, function() {
 });
 
 const wss = new webSocketServer({
-  httpServer: server
+  httpServer: server,
+  maxReceivedFrameSize: 500000
 });
 
 wss.on('request', function(request) {
@@ -47,7 +48,12 @@ wss.on('request', function(request) {
         user = {userpic: data.message, userColor: colors.shift()};
         users.push(user);
         wss.broadcast(JSON.stringify({data: users, type: 'user'}));
+      } else if (data.type === 'message') {
+        history.push(data.message);
+        wss.broadcast(JSON.stringify({data: history, type: 'message'}));
       }
+    } else if (message.type === 'binary') {
+      wss.broadcast(message.binaryData);
     }
   });
   // user disconnected

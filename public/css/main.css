@@ -2,6 +2,7 @@ body {
   background-image: url(https://unsplash.it/g/1280/1024/?random);
   background-size: cover;
   background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 main {
@@ -18,4 +19,27 @@ main {
 
 .login-block p {
   text-align: center;
+}
+
+.chat {
+  display: flex;
+}
+
+.chat .sidebar {
+  min-width: 350px;
+  position: fixed;
+}
+
+.chat .sidebar img {
+  margin-right: 10px;
+}
+
+.chat .messages {
+  width: calc(100vw - 350px);
+  margin-left: 350px;
+}
+
+.chat .messages img {
+  display: block;
+  margin-bottom: 15px;
 }

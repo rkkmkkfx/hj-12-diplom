@@ -31,7 +31,7 @@ function renderPhotoBooth() {
   return e(video)
 }
 
-function renderImage(src, size) {
+function renderImage(src, size = {width: 300, height: 300}) {
   return e('img', {src: src, width: size.width, height: size.height})
 }
 
@@ -43,12 +43,33 @@ function renderChatUI() {
         e('button', {}, 'Draw'),
         e('button', {}, 'Video'),
         e('button', {}, 'File')
-      ])
+      ]),
+      e('div', {class: 'inputPlace'})
     ]),
     e('div', {class: 'messages'})
   ])
 }
 
+function ab2str(buf) {
+  return String.fromCodePoint.apply(null, new Uint8Array(buf));
+}
+
 const loginCanvas = renderCanvasFor('login');
-console.log(loginCanvas);
 document.querySelector('.login-block').appendChild(loginCanvas);
+
+function handleButtonClick(event) {
+  switch (event.currentTarget.innerText) {
+    case 'Draw':
+      document.querySelector('.inputPlace').appendChild(renderCanvasFor('message'));
+      drawInit();
+  }
+
+
+}
+
+function initButtons() {
+  const buttons = document.querySelectorAll('.sidebar button');
+  for (let button of buttons) {
+    button.addEventListener('click', handleButtonClick);
+  }
+}
