@@ -4,28 +4,48 @@ const webSocketsServerPort = 1337;
 
 const webSocketServer = require('websocket').server;
 const http = require('http');
+const jsonServer = require('json-server');
+const apiServer = jsonServer.create();
+const router = jsonServer.router('db.json');
+const middlewares = jsonServer.defaults();
 
-const history = [];
-const clients = [];
-
-const users = [];
+const online = [];
 
 const colors = [ 'red', 'green', 'blue', 'magenta', 'purple', 'plum', 'orange' ];
 colors.sort(function(a,b) { return Math.random() > 0.5; } );
 
-let user, index;
+let user;
+
+function getID() {
+  const id = Math.floor(Math.random()*90000) + 10000;
+  let el = users.findIndex(user => user.id === id);
+  if (el === -1) {
+    return id
+  } else {
+    getID();
+  }
+}
 
 const server = http.createServer((request, response) => {});
 server.listen(webSocketsServerPort, function() {
-  users.length = 0;
+  online.length = 0;
   console.log((new Date()) + " Server is listening on port "
     + webSocketsServerPort);
 });
 
+apiServer.use(middlewares);
+apiServer.use(router);
+apiServer.listen(3000, () => {
+  console.log('JSON Server is running')
+});
+
 const wss = new webSocketServer({
   httpServer: server,
+  keepalive: false,
   maxReceivedFrameSize: 500000
 });
+
+wss.on('connect', (connection) => console.log('Connected'));
 
 wss.on('request', function(request) {
   console.log((new Date()) + ' Connection from origin '
@@ -33,40 +53,31 @@ wss.on('request', function(request) {
 
   const connection = request.accept(null, request.origin);
 
-  index = clients.push(connection) - 1;
   console.log((new Date()) + ' Connection accepted.');
-  // send back chat history
-  if (history.length > 0) {
-    connection.sendUTF(
-      JSON.stringify({ type: 'history', data: history} ));
-  }
   // user sent some message
   connection.on('message', function(message) {
     if (message.type === 'utf8') {
       const data = JSON.parse(message.utf8Data);
       if (data.type === 'login') {
-        user = {userpic: data.message, userColor: colors.shift()};
-        users.push(user);
-        wss.broadcast(JSON.stringify({data: users, type: 'user'}));
+        const index = (data.userID) ? data.userID : getID();
+        user = {userpic: data.pic, color: colors.shift(), id: index, type: 'user'};
+        online.push(user);
+        connection.send(JSON.stringify(user));
+        wss.broadcast(JSON.stringify({data: online, type: 'users'}));
       } else if (data.type === 'message') {
-        history.push(data.message);
-        wss.broadcast(JSON.stringify({data: history, type: 'message'}));
+        wss.broadcast(JSON.stringify({data: data, type: 'message'}));
+      } else if (data.type === 'close') {
+        let i = online.findIndex(user => user.id === data.index);
+        colors.push(online[i].color);
+        online.splice(i, 1);
+        wss.broadcast(JSON.stringify({data: online, type: 'users'}));
       }
     } else if (message.type === 'binary') {
       wss.broadcast(message.binaryData);
     }
   });
   // user disconnected
-  connection.on('close', function(connection) {
-    if (user) {
-      console.log((new Date()) + " Peer "
-        + connection.remoteAddress + " disconnected.");
-      // remove user from the list of connected clients
-      clients.splice(index, 1);
-      users.splice(index, 1);
-      wss.broadcast(JSON.stringify({data: users, type: 'user'}));
-      // push back user's color to be reused by another user
-      colors.push(user.userColor);
-    }
+  connection.on('close', (connection) => {
+    console.log((new Date()) + " Peer disconnected.");
   });
 });

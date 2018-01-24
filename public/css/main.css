@@ -3,6 +3,11 @@ body {
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;
+  margin: 0;
+}
+
+.center {
+  text-align: center;
 }
 
 main {
@@ -26,7 +31,8 @@ main {
 }
 
 .chat .sidebar {
-  min-width: 350px;
+  width: 320px;
+  padding: 0 10px;
   position: fixed;
 }
 
@@ -35,11 +41,23 @@ main {
 }
 
 .chat .messages {
-  width: calc(100vw - 350px);
+  width: calc(100vw - 380px);
   margin-left: 350px;
 }
 
 .chat .messages img {
   display: block;
   margin-bottom: 15px;
+}
+
+.chat .message-block {
+  display: flex;
+}
+
+.chat .message-block.right {
+  flex-direction: row-reverse;
+}
+
+#send {
+  width: 100%;
 }

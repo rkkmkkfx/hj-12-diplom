@@ -1,4 +1,4 @@
-function drawInit() {
+function drawInit(color = 'yellow') {
   const canvas = document.querySelector('canvas');
   const ctx = canvas.getContext('2d');
 
@@ -8,7 +8,6 @@ function drawInit() {
   const brushSize = 10;
 
   function initCanvas() {
-    console.log('initC');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.beginPath();
     ctx.rect(0, 0, canvas.width, canvas.height);
@@ -44,7 +43,7 @@ function drawInit() {
       } else {
         ctx.beginPath();
         ctx.lineWidth = point.brushSize;
-        ctx.strokeStyle = `hsl(50, 100%, 50%)`;
+        ctx.strokeStyle = color;
         ctx.quadraticCurveTo(...prevPoint.coords, ...point.coords);
         ctx.stroke();
       }
