@@ -8,8 +8,6 @@ function handleButtonClick(event) {
   switch (event.currentTarget.innerText) {
     case 'Draw':
       document.querySelector('.inputPlace').innerHTML = null;
-      const track = localStream.getTracks()[0];
-      track.stop();
       document.querySelector('.inputPlace').appendChild(renderCanvasFor('message'));
       sendBtn = document.getElementById('send');
       sendBtn.addEventListener('click', sendData);
@@ -24,8 +22,6 @@ function handleButtonClick(event) {
       break;
     case 'File':
       document.querySelector('.inputPlace').innerHTML = null;
-      const track = localStream.getTracks()[0];
-      track.stop();
       document.querySelector('.inputPlace').appendChild(renderFileInput());
       sendBtn = document.getElementById('send');
       sendBtn.addEventListener('click', sendData);
@@ -81,7 +77,7 @@ function sendData(event) {
       data = JSON.stringify({pic: tmp.toDataURL(), type: 'message', userID: (user) ? user.id : null});
       connection.send(data);
       container.remove();
-      const track = localStream.getTracks()[0];
+      let track = localStream.getTracks()[0];
       track.stop();
     }
   }
