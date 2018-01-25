@@ -7,16 +7,28 @@ function handleButtonClick(event) {
   let sendBtn;
   switch (event.currentTarget.innerText) {
     case 'Draw':
+      document.querySelector('.inputPlace').innerHTML = null;
+      const track = localStream.getTracks()[0];
+      track.stop();
       document.querySelector('.inputPlace').appendChild(renderCanvasFor('message'));
       sendBtn = document.getElementById('send');
       sendBtn.addEventListener('click', sendData);
       drawInit(user.color);
       break;
     case 'Photo':
+      document.querySelector('.inputPlace').innerHTML = null;
       document.querySelector('.inputPlace').appendChild(renderPhotoBooth());
       sendBtn = document.getElementById('send');
       sendBtn.addEventListener('click', sendData);
       videoInit();
+      break;
+    case 'File':
+      document.querySelector('.inputPlace').innerHTML = null;
+      const track = localStream.getTracks()[0];
+      track.stop();
+      document.querySelector('.inputPlace').appendChild(renderFileInput());
+      sendBtn = document.getElementById('send');
+      sendBtn.addEventListener('click', sendData);
       break;
   }
 
@@ -69,7 +81,7 @@ function sendData(event) {
       data = JSON.stringify({pic: tmp.toDataURL(), type: 'message', userID: (user) ? user.id : null});
       connection.send(data);
       container.remove();
-      var track = localStream.getTracks()[0];
+      const track = localStream.getTracks()[0];
       track.stop();
     }
   }

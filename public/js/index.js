@@ -30,9 +30,18 @@ function renderCanvasFor(type) {
 }
 
 function renderPhotoBooth() {
-  return e('div', {class: 'video'}, [
+  return e(
+    'div', {class: 'video'}, [
     e('video', {width: 320, height: 240}),
     e('p', {}, 'DblClk to clear; "Enter" to send'),
+    e('button', {id: 'send'}, 'Send')
+  ])
+}
+
+function renderFileInput() {
+  return e(
+    'div', {class: 'file'}, [
+    e('input', {type: 'file', accept: 'image/*'}),
     e('button', {id: 'send'}, 'Send')
   ])
 }

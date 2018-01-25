@@ -18,7 +18,7 @@ let user;
 
 function getID() {
   const id = Math.floor(Math.random()*90000) + 10000;
-  let el = users.findIndex(user => user.id === id);
+  let el = online.findIndex(user => user.id === id);
   if (el === -1) {
     return id
   } else {
