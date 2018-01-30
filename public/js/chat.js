@@ -2,9 +2,8 @@
 
 let user;
 let wsHost = location.origin.replace(/^http/, 'ws');
-wsHost = wsHost.replace(':3000', ':1337');
-console.log(wsHost);
-const connection = new WebSocket(wsHost);
+wsHost = wsHost.replace(':3000', '');
+const connection = new WebSocket(wsHost+':1337');
 
 function handleButtonClick(event) {
   let sendBtn;
