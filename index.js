@@ -12,7 +12,7 @@ const middlewares = jsonServer.defaults();
 const online = [];
 
 const colors = [ 'red', 'green', 'blue', 'magenta', 'purple', 'plum', 'orange' ];
-colors.sort(function(a,b) { return Math.random() > 0.5; } );
+colors.sort(() => { return Math.random() > 0.5; } );
 
 let user;
 
@@ -33,9 +33,11 @@ server.listen(webSocketsServerPort, function() {
     + webSocketsServerPort);
 });
 
+const apiPort = process.env.PORT || 3000;
+
 apiServer.use(middlewares);
 apiServer.use(router);
-apiServer.listen(3000, () => {
+apiServer.listen(apiPort, () => {
   console.log('JSON Server is running')
 });
 
@@ -45,7 +47,7 @@ const wss = new webSocketServer({
   maxReceivedFrameSize: 500000
 });
 
-wss.on('connect', (connection) => console.log('Connected'));
+wss.on('connect', () => console.log('Connected'));
 
 wss.on('request', function(request) {
   console.log((new Date()) + ' Connection from origin '
@@ -77,7 +79,7 @@ wss.on('request', function(request) {
     }
   });
   // user disconnected
-  connection.on('close', (connection) => {
+  connection.on('close', () => {
     console.log((new Date()) + " Peer disconnected.");
   });
 });

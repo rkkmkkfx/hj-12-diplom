@@ -41,7 +41,8 @@ function renderPhotoBooth() {
 function renderFileInput() {
   return e(
     'div', {class: 'file'}, [
-    e('input', {type: 'file', accept: 'image/*'}),
+    e('label', {for: 'fileUpload', class: 'placeholder'}, 'DROP image here, or CLICK to select file'),
+    e('input', {type: 'file', id: 'fileUpload', accept: 'image/*', hidden: true}),
     e('button', {id: 'send'}, 'Send')
   ])
 }
@@ -62,7 +63,8 @@ function renderMessage(data, id) {
           e('img', {src: data.pic})
         ])
       ])
-    });
+    })
+    .catch(err => console.log(err));
 }
 
 function renderChatUI() {
@@ -89,6 +91,25 @@ function videoInit() {
       video.srcObject = stream;
       video.play();
     })
+}
+
+function onFileInput(event, container) {
+  event.preventDefault();
+  const reader = new FileReader();
+  const imageTypeRegExp = /^image\//;
+  const filesFrom = event.dataTransfer || event.target;
+  const file = filesFrom.files[0];
+  if (imageTypeRegExp.test(file.type)) {
+    reader.addEventListener('load', event => {
+      let img = new Image();
+      img.src = event.target.result;
+      img.className = 'fileInput';
+      img.id = user.id;
+      container.querySelector('.placeholder').innerHTML = '';
+      container.querySelector('.placeholder').appendChild(img);
+    });
+    reader.readAsDataURL(file);
+  }
 }
 
 const loginCanvas = renderCanvasFor('login');

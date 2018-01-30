@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 let user;
 const connection = new WebSocket('ws://127.0.0.1:1337');
@@ -22,7 +22,11 @@ function handleButtonClick(event) {
       break;
     case 'File':
       document.querySelector('.inputPlace').innerHTML = null;
-      document.querySelector('.inputPlace').appendChild(renderFileInput());
+      const container = renderFileInput();
+      container.addEventListener('drop', e => onFileInput(e, container));
+      document.querySelector('.inputPlace').appendChild(container);
+      container.addEventListener('dragover', event => event.preventDefault());
+      document.getElementById('fileUpload').addEventListener('change', e => onFileInput(e, container));
       sendBtn = document.getElementById('send');
       sendBtn.addEventListener('click', sendData);
       break;
@@ -42,6 +46,7 @@ function sendData(event) {
   if ((event.code === 'Enter') || (event.type === 'click')) {
     const drawInput = document.querySelector('canvas');
     const videoInput = document.querySelector('video');
+    const fileInput = document.querySelector('.fileInput');
     let data;
 
     if (drawInput) {
@@ -51,6 +56,16 @@ function sendData(event) {
         data = JSON.stringify({pic: event.currentTarget.src, type: type, userID: event.currentTarget.id});
       } else {
         data = JSON.stringify({pic: drawInput.toDataURL(), type: type, userID: (user) ? user.id : null});
+      }
+      if (type === 'message') {
+        fetch('/messages', {
+          method: 'post',
+          headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json'
+          },
+          body: data
+        })
       }
       connection.send(data);
       container.remove();
@@ -79,22 +94,22 @@ function sendData(event) {
       container.remove();
       let track = localStream.getTracks()[0];
       track.stop();
+    } else if (fileInput) {
+      const container = fileInput.parentElement;
+      data = JSON.stringify({pic: fileInput.src, type: 'message', userID: (user) ? user.id : null});
+      fetch('/messages', {
+        method: 'post',
+        headers: {
+          'Accept': 'application/json, text/plain, */*',
+          'Content-Type': 'application/json'
+        },
+        body: data
+      });
+      connection.send(data);
+      container.parentElement.remove();
     }
   }
 }
-
-HTMLCanvasElement.prototype.renderImage = function(blob){
-
-  let ctx = this.getContext('2d');
-  let img = new Image();
-
-  img.onload = function(){
-    ctx.drawImage(img, 0, 0)
-  }
-
-  img.src = URL.createObjectURL(blob);
-  return img;
-};
 
 function handleMessage(event) {
   const message = JSON.parse(event.data);
@@ -109,7 +124,9 @@ function handleMessage(event) {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(user)
-    });
+    })
+      .then()
+      .catch(err => console.log('Err',err));
   } else if (message.type === 'users') {
     if (usersBlock) {
       usersBlock.innerHTML = '';
@@ -119,17 +136,8 @@ function handleMessage(event) {
       initButtons();
     }
   } else if (message.type === 'message') {
-    fetch('/messages', {
-      method: 'post',
-      headers: {
-        'Accept': 'application/json, text/plain, */*',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(message.data)
-    }).then(() => {
-      renderMessage(message.data, user.id)
-        .then(el => messages.appendChild(el));
-    });
+    renderMessage(message.data, user.id)
+      .then(el => messages.appendChild(el));
   }
 }
 

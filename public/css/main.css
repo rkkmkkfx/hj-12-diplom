@@ -36,7 +36,7 @@ main {
   position: fixed;
 }
 
-.chat .sidebar img {
+.chat .sidebar .users img {
   margin-right: 10px;
 }
 
@@ -48,6 +48,7 @@ main {
 .chat .messages img {
   display: block;
   margin-bottom: 15px;
+  max-width: 50vw;
 }
 
 .chat .message-block {
@@ -60,4 +61,18 @@ main {
 
 #send {
   width: 100%;
+}
+
+.placeholder {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 320px;
+  min-height: 320px;
+  border-radius: 4px;
+  background-color: #fff;
+}
+
+.fileInput {
+  max-width: 100%;
 }
