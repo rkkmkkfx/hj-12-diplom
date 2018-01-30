@@ -1,7 +1,10 @@
 'use strict';
 
 let user;
-const connection = new WebSocket('ws://localhost:1337');
+let wsHost = location.origin.replace(/^http/, 'ws');
+wsHost = wsHost.replace(':3000', ':1337');
+console.log(wsHost);
+const connection = new WebSocket(wsHost);
 
 function handleButtonClick(event) {
   let sendBtn;
