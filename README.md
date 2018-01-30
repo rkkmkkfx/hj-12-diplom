@@ -6,7 +6,7 @@ Demo - https://hj-12-diplom.herokuapp.com/
 
 мокап - https://marvelapp.com/4c8cba7
 
-### Запуск приложения:
+### Запуск приложения локально:
 1. Установите зависимости: `npm install`
 2. Запустите локальный сервер - `npm start`
 2. Откройте в браузере [http://localhost:3000]()
