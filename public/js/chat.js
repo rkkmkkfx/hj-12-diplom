@@ -1,7 +1,7 @@
 'use strict';
 
 let user;
-const connection = new WebSocket('ws://127.0.0.1:1337');
+const connection = new WebSocket('ws://localhost:1337');
 
 function handleButtonClick(event) {
   let sendBtn;
