@@ -1,7 +1,7 @@
 'use strict';
 
 let user;
-const connection = new WebSocket('ws://hj12-diplom-socket.herokuapp.com/');
+const connection = new WebSocket('wss://hj12-diplom-socket.herokuapp.com/');
 
 function handleButtonClick(event) {
   let sendBtn;
