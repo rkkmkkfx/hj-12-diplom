@@ -81,6 +81,7 @@ function sendData(event) {
               renderMessage(message, user.id)
                 .then(el => chat.appendChild(el));
             }
+            window.scrollTo(0,document.body.scrollHeight);
           })
       }
     } else if (videoInput) {
