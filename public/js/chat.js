@@ -1,9 +1,7 @@
 'use strict';
 
 let user;
-let wsHost = location.origin.replace(/^http/, 'ws');
-wsHost = wsHost.replace(':3000', '');
-const connection = new WebSocket(wsHost+':1337');
+const connection = new WebSocket('ws://hj12-diplom-socket.herokuapp.com/');
 
 function handleButtonClick(event) {
   let sendBtn;
