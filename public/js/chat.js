@@ -137,7 +137,10 @@ function handleMessage(event) {
     }
   } else if (message.type === 'message') {
     renderMessage(message.data, user.id)
-      .then(el => messages.appendChild(el));
+      .then(el => {
+        messages.appendChild(el);
+        window.scrollTo(0,document.body.scrollHeight);
+      });
   }
 }
 
